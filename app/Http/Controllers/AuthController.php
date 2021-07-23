@@ -15,15 +15,31 @@ class AuthController extends Controller
     public function signUp(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'nombre' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string'
+            'clave' => 'required|string',
+            'sexo' => 'required|in:H,M',
+            'edad' => 'required|numeric|integer|min:18',
+            'peso' => 'required|numeric|min:0',
+            'actividad_fisica' => 'required|in:1,2,3,4,5,6',
+            'kilocalorias' => 'numeric|integer|nullable',
+            'grasas' => 'numeric|integer|nullable',
+            'proteinas' => 'numeric|integer|nullable',
+            'carbohidratos' => 'numeric|integer|nullable',
         ]);
 
         User::create([
-            'name' => $request->name,
+            'name' => $request->nombre,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->clave),
+            'sexo' => $request->sexo,
+            'edad' => $request->edad,
+            'peso' => $request->peso,
+            'actividad_fisica' => $request->actividad_fisica,
+            'kilocalorias' => $request->kilocalorias,
+            'grasas' => $request->grasas,
+            'proteinas' => $request->proteinas,
+            'carbohidratos' => $request->carbohidratos,
         ]);
 
         return response()->json([
