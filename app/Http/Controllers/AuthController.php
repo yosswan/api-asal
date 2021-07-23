@@ -17,7 +17,7 @@ class AuthController extends Controller
         $request->validate([
             'nombre' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'clave' => 'required|string',
+            'password' => 'required|string',
             'sexo' => 'required|in:H,M',
             'edad' => 'required|numeric|integer|min:18',
             'peso' => 'required|numeric|min:0',
@@ -31,7 +31,7 @@ class AuthController extends Controller
         User::create([
             'name' => $request->nombre,
             'email' => $request->email,
-            'password' => bcrypt($request->clave),
+            'password' => bcrypt($request->password),
             'sexo' => $request->sexo,
             'edad' => $request->edad,
             'peso' => $request->peso,
