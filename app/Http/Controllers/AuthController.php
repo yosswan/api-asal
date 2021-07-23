@@ -36,10 +36,10 @@ class AuthController extends Controller
             'edad' => $request->edad,
             'peso' => $request->peso,
             'actividad_fisica' => $request->actividad_fisica,
-            'kilocalorias' => $request->kilocalorias,
-            'grasas' => $request->grasas,
-            'proteinas' => $request->proteinas,
-            'carbohidratos' => $request->carbohidratos,
+            'kilocalorias' => $request->kilocalorias?$request->kilocalorias:0,
+            'grasas' => $request->grasas?$request->grasas:0,
+            'proteinas' => $request->proteinas?$request->proteinas:0,
+            'carbohidratos' => $request->carbohidratos?$request->carbohidratos:0,
         ]);
 
         return response()->json([
