@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\UrlGenerator;
+use App\Repositories\RecetaRepository;
+use App\Repositories\RecetaRepositoryEloquent;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
         if (env('REDIRECT_HTTPS')) {
             $this->app['request']->server->set('HTTPS', true);
         }
+        $this->app->bind(\App\Repositories\IngredienteRepository::class, \App\Repositories\IngredienteRepositoryEloquent::class);
+        $this->app->bind(RecetaRepository::class, RecetaRepositoryEloquent::class);
     }
 
     /**
