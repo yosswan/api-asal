@@ -14,6 +14,7 @@ use App\Repositories\IngredienteRepository;
 use App\Validators\IngredienteValidator;
 use Maatwebsite\Excel\Facades\Excel;
 use Exception;
+use App\Entities\Ingrediente;
 
 /**
  * Class IngredientesController.
@@ -148,5 +149,17 @@ class IngredientesController extends Controller
         $deleted = $this->repository->delete($id);
 
         return $this->sendResponse($deleted, 'Ingrediente deleted.');
+    }
+
+    public function destroy_all()
+    {
+        
+        try {
+            $deleted = Ingrediente::truncate();
+
+            return $this->sendResponse($deleted, 'Ingredientes deleted.');
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
     }
 }

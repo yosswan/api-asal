@@ -41,9 +41,9 @@ class RecetasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $recetas = $this->repository->all();
+        $recetas = $request->user()->recetas;
 
         return $this->sendResponse($recetas, 'Recetas');
     }
@@ -60,8 +60,7 @@ class RecetasController extends Controller
     public function store(RecetaCreateRequest $request)
     {
         try {
-
-            $recetum = $this->repository->create($request->all());
+            $recetum = $request->user()->recetas()->create($request->all());
             foreach ($request->ingredientes as $value) {
                 $recetum->ingredientes()->attach($value['id'], ['cantidad' => $value['cantidad']]);
             }
@@ -80,11 +79,15 @@ class RecetasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, int $id)
     {
-        $recetum = $this->repository->find($id);
-        $recetum->ingredientes;
-        return $this->sendResponse($recetum, 'Receta');
+        try {
+            $recetum = $request->user()->recetas()->findOrFail($id);
+            $recetum->ingredientes;
+            return $this->sendResponse($recetum, 'Receta');
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -112,7 +115,7 @@ class RecetasController extends Controller
     public function update(RecetaUpdateRequest $request, $id)
     {
         try {
-
+            $request->user()->recetas()->findOrFail($id);
             $recetum = $this->repository->update($request->all(), $id);
             if(!empty($request->ingredientes)){
                 $recetum->ingredientes()->detach();
@@ -135,12 +138,16 @@ class RecetasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $receta = $this->repository->find($id);
-        $receta->ingredientes()->detach();
-        $deleted = $this->repository->delete($id);
+        try {
+            $receta = $request->user()->recetas()->findOrFail($id);
+            $receta->ingredientes()->detach();
+            $deleted = $this->repository->delete($id);
 
-        return $this->sendResponse($deleted, 'Receta deleted.');
+            return $this->sendResponse($deleted, 'Receta deleted.');
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
     }
 }
