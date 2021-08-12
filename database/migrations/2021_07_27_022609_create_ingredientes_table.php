@@ -19,10 +19,10 @@ class CreateIngredientesTable extends Migration
 		Schema::create('ingredientes', function(Blueprint $table) {
             $table->increments('id');
 			$table->string('nombre');
-			$table->integer('kilocalorias');
-			$table->integer('carbohidratos');
-			$table->integer('grasas');
-			$table->integer('proteinas');
+			$table->integer('calorias');
+			$table->float('carbohidratos');
+			$table->float('grasas');
+			$table->float('proteinas');
 			$table->enum('categoria', [
 				'Cereales',
 				'Carnes',

@@ -26,7 +26,7 @@ class User extends Authenticatable
         'sexo',
         'actividad_fisica',
         'peso',
-        'kilocalorias',
+        'calorias',
         'grasas',
         'proteinas',
         'carbohidratos',

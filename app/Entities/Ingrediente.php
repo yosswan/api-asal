@@ -22,7 +22,7 @@ class Ingrediente extends Model implements Transformable
      */
     protected $fillable = [
         'nombre',
-        'kilocalorias',
+        'calorias',
         'carbohidratos',
         'grasas',
         'proteinas',

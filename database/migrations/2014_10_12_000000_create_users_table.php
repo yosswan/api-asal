@@ -21,10 +21,10 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('edad');
             $table->enum('actividad_fisica', [1,2,3,4,5,6]);
-            $table->integer('kilocalorias');
-            $table->integer('carbohidratos');
-            $table->integer('grasas');
-            $table->integer('proteinas');
+            $table->integer('calorias');
+            $table->float('carbohidratos');
+            $table->float('grasas');
+            $table->float('proteinas');
             $table->float('peso');
             $table->enum('sexo', ['M', 'H']);
             $table->rememberToken();

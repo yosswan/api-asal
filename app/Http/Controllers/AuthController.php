@@ -22,13 +22,13 @@ class AuthController extends Controller
             'edad' => 'required|numeric|integer|min:18',
             'peso' => 'required|numeric|min:0',
             'actividad_fisica' => 'required|in:1,2,3,4,5,6',
-            'kilocalorias' => 'numeric|integer|nullable',
-            'grasas' => 'numeric|integer|nullable',
-            'proteinas' => 'numeric|integer|nullable',
-            'carbohidratos' => 'numeric|integer|nullable',
+            'calorias' => 'numeric|integer|nullable',
+            'grasas' => 'required_with:calorias|numeric|integer|nullable',
+            'proteinas' => 'required_with:calorias|numeric|integer|nullable',
+            'carbohidratos' => 'required_with:calorias|numeric|integer|nullable',
         ]);
 
-        User::create([
+        $array = [
             'name' => $request->nombre,
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -36,11 +36,22 @@ class AuthController extends Controller
             'edad' => $request->edad,
             'peso' => $request->peso,
             'actividad_fisica' => $request->actividad_fisica,
-            'kilocalorias' => $request->kilocalorias?$request->kilocalorias:0,
-            'grasas' => $request->grasas?$request->grasas:0,
-            'proteinas' => $request->proteinas?$request->proteinas:0,
-            'carbohidratos' => $request->carbohidratos?$request->carbohidratos:0,
-        ]);
+        ];
+
+        if(!empty($request->calorias)){
+            $array = array_merge($array, [
+                'calorias' => $request->calorias,
+                'grasas' => $request->grasas,
+                'proteinas' => $request->proteinas,
+                'carbohidratos' => $request->carbohidratos,
+            ]);    
+        } else{
+            $array = array_merge($array, $this->calcular_requerimiento_nutricional(
+                $request->edad, $request->sexo, $request->peso, $request->actividad_fisica
+            ));
+        }
+
+        User::create($array);
 
         return response()->json([
             'message' => 'Successfully created user!'

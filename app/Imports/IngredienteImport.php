@@ -17,7 +17,7 @@ class IngredienteImport implements ToModel, WithHeadingRow
     {
         return new Ingrediente([
             'nombre' => $row['nombre'],
-            'kilocalorias' => $row['kilocalorias'],
+            'calorias' => $row['calorias'],
             'carbohidratos' => $row['carbohidratos'],
             'grasas' => $row['grasas'],
             'proteinas' => $row['proteinas'],

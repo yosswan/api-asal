@@ -40,7 +40,7 @@ class IngredienteUpdateRequest extends FormRequest
             'Alimentos Varios'
         ];
         return [
-            'kilocalorias' => 'numeric|integer|min:1',
+            'calorias' => 'numeric|integer|min:1',
             'carbohidratos' => 'numeric|integer|min:1',
             'grasas' => 'numeric|integer|min:1',
             'proteinas' => 'numeric|integer|min:1',

@@ -41,7 +41,7 @@ class IngredienteCreateRequest extends FormRequest
         ];
         return [
             'nombre' => 'required',
-            'kilocalorias' => 'required|numeric|integer|min:1',
+            'calorias' => 'required|numeric|integer|min:1',
             'carbohidratos' => 'required|numeric|integer|min:1',
             'grasas' => 'required|numeric|integer|min:1',
             'proteinas' => 'required|numeric|integer|min:1',
