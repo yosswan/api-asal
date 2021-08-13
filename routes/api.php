@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IngredientesController;
 use App\Http\Controllers\RecetasController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +40,5 @@ Route::group([
     /** Ruta oculta XD */
     //Route::post('ingredientes/importar_excel', [IngredientesController::class, 'importar_excel']);
     Route::post('ingredientes/truncate', [IngredientesController::class, 'destroy_all']);
+    Route::put('user', [UserController::class, 'update']);
 });
