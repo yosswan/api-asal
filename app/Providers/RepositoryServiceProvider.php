@@ -27,6 +27,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         /*$this->app->bind(\App\Repositories\IngredienteRepository::class, \App\Repositories\IngredienteRepositoryEloquent::class);
         $this->app->bind(RecetaRepository::class, RecetaRepositoryEloquent::class);*/
+        $this->app->bind(\App\Repositories\ComidaRepository::class, \App\Repositories\ComidaRepositoryEloquent::class);
         //:end-bindings:
     }
 }

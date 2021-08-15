@@ -41,4 +41,5 @@ Route::group([
     //Route::post('ingredientes/importar_excel', [IngredientesController::class, 'importar_excel']);
     Route::post('ingredientes/truncate', [IngredientesController::class, 'destroy_all']);
     Route::put('user', [UserController::class, 'update']);
+    Route::delete('user', [UserController::class, 'destroy']);
 });

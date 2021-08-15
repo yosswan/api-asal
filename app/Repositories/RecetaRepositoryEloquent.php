@@ -24,15 +24,5 @@ class RecetaRepositoryEloquent extends BaseRepository implements RecetaRepositor
     {
         return Receta::class;
     }
-
-    
-
-    /**
-     * Boot up the repository, pushing criteria
-     */
-    public function boot()
-    {
-        $this->pushCriteria(app(RequestCriteria::class));
-    }
     
 }

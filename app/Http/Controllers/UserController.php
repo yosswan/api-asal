@@ -150,8 +150,25 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|min:4',
+        ]);
+
+        try{
+            if($validator->fails()){
+                return $this->sendError($validator->errors());
+            }
+            $user = $request->user();
+            if(!Hash::check($request->password, $user->password)){
+                return $this->sendError('Contraseña incorrecta');
+            }
+            $user->token()->revoke();
+            $delete = $user->delete();
+            return $this->sendResponse($delete, 'Usuario eliminado');
+        } catch (Exception $e){
+            return $this->sendError($e->getMessage());
+        }
     }
 }

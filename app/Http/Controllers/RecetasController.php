@@ -29,7 +29,6 @@ class RecetasController extends Controller
      * RecetasController constructor.
      *
      * @param RecetaRepository $repository
-     * @param RecetaValidator $validator
      */
     public function __construct(RecetaRepository $repository)
     {

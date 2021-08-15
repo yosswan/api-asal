@@ -33,7 +33,6 @@ class IngredientesController extends Controller
      * IngredientesController constructor.
      *
      * @param IngredienteRepository $repository
-     * @param IngredienteValidator $validator
      */
     public function __construct(IngredienteRepository $repository)
     {
