@@ -96,42 +96,46 @@ class Controller extends BaseController
 
     private function calcular_calorias(int $edad, $sexo, int $peso, int $actividad_fisica){
         $calorias1 = (24 + $actividad_fisica) * $peso;
-        $calorias2 = $this->formula_por_sexo($sexo, $edad, $actividad_fisica);
+        $calorias2 = $this->formula_por_sexo($sexo, $edad, $actividad_fisica, $peso);
         return ($calorias1 + $calorias2) / 2;
     }
 
-    private function formula_por_sexo($sexo, int $edad, int $actividad_fisica){
+    private function formula_por_sexo($sexo, int $edad, int $actividad_fisica, int $peso){
         if($sexo === 'M'){
-            return $this->formula_por_edad_mujer($edad, $actividad_fisica);
+            return $this->formula_por_edad_mujer($edad, $actividad_fisica, $peso);
         } elseif ($sexo === 'H') {
-            return $this->formula_por_edad_hombre($edad, $actividad_fisica);
+            return $this->formula_por_edad_hombre($edad, $actividad_fisica, $peso);
         } else {
             throw new Exception('Sexo inválido');
         }
     }
 
-    private function formula_por_edad_hombre(int $edad, int $actividad_fisica){
+    private function formula_por_edad_hombre(int $edad, int $actividad_fisica, $peso){
+        $valor = 0;
         if(in_array($edad, range(18,30))){
-            return 15.3 * $this->constante_actividad_fisica_hombre($actividad_fisica) + 679;
+            $valor = 15.3 * $peso + 679;
         } elseif (in_array($edad, range(31,60))) {
-            return 11.6 * $this->constante_actividad_fisica_hombre($actividad_fisica) + 879;
+            $valor = 11.6 * $peso + 879;
         } elseif ($edad > 60) {
-            return 13.5 * $this->constante_actividad_fisica_hombre($actividad_fisica) + 487;
+            $valor = 13.5 * $peso + 487;
         } else {
             throw new Exception('Edad fuera del rango aceptado');
         }
+        return $valor * $this->constante_actividad_fisica_hombre($actividad_fisica);
     }
 
-    private function formula_por_edad_mujer(int $edad, int $actividad_fisica){
+    private function formula_por_edad_mujer(int $edad, int $actividad_fisica, $peso){
+        $valor = 0;
         if(in_array($edad, range(18,30))){
-            return 14.7 * $this->constante_actividad_fisica_mujer($actividad_fisica) + 496;
+            $valor = 14.7 * $peso + 496;
         } elseif (in_array($edad, range(31,60))) {
-            return 8.7 * $this->constante_actividad_fisica_mujer($actividad_fisica) + 829;
+            $valor = 8.7 * $peso + 829;
         } elseif ($edad > 60) {
-            return 10.5 * $this->constante_actividad_fisica_mujer($actividad_fisica) + 596;
+            $valor = 10.5 * $peso + 596;
         } else {
             throw new Exception('Edad fuera del rango aceptado');
         }
+        return $valor * $this->constante_actividad_fisica_mujer($actividad_fisica);
     }
 
     private function constante_actividad_fisica_hombre(int $actividad_fisica){

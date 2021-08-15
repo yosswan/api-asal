@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -77,11 +78,25 @@ class UserController extends Controller
             'email' => 'string|email|unique:users',
             'password' => 'required|string|min:4',
             'new_password' => 'string|min:4',
+            'sexo' => 'in:H,M',
+            'fecha_nacimiento' => 'date_format:d-m-Y',
+            'peso' => 'numeric|min:0',
+            'actividad_fisica' => 'in:1,2,3,4,5,6',
+            'calorias' => 'numeric|integer|nullable',
+            'grasas' => 'required_with:calorias|numeric|integer|nullable',
+            'proteinas' => 'required_with:calorias|numeric|integer|nullable',
+            'carbohidratos' => 'required_with:calorias|numeric|integer|nullable',
         ]);
 
         try{
             if($validator->fails()){
                 return $this->sendError($validator->errors());
+            }
+            $fecha = Carbon::createFromFormat('d-m-Y', $request->fecha_nacimiento);
+            $fecha_actual = Carbon::now();
+            $edad = $fecha_actual->diffInYears($fecha);
+            if($edad < 18){
+                return $this->sendError('La edad debe ser mayor a 17 años');
             }
 
             $user = $request->user();
@@ -89,15 +104,36 @@ class UserController extends Controller
                 return $this->sendError('Contraseña incorrecta');
             }
 
-            if(!empty($request->nombre)){
+            if(!empty($request->new_password)){
                 $array['password'] = bcrypt($request->new_password);
             }
             if(!empty($request->nombre)){
                 $array['name'] = $request->nombre;
             }
-            if(!empty($request->email)){
-                $array['email'] = $request->email;
+            if(!empty($request->fecha_nacimiento)){
+                $array['fecha_nacimiento'] = $fecha;
             }
+
+            $lista = ['sexo', 'peso', 'actividad_fisica'];
+            foreach ($lista as $value) {
+                if(!empty($request->$value)){
+                    $array[$value] = $request->$value;
+                }
+            }
+
+            if(!empty($request->calorias)){
+                $array = array_merge($array, [
+                    'calorias' => $request->calorias,
+                    'grasas' => $request->grasas,
+                    'proteinas' => $request->proteinas,
+                    'carbohidratos' => $request->carbohidratos,
+                ]);    
+            } else{
+                $array = array_merge($array, $this->calcular_requerimiento_nutricional(
+                    $edad, $request->sexo, $request->peso, $request->actividad_fisica
+                ));
+            }
+            
             $user->update($array);
             $user->refresh();
 
