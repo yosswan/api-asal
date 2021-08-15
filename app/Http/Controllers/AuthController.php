@@ -19,7 +19,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:4',
             'sexo' => 'required|in:H,M',
-            'edad' => 'required|numeric|integer|min:18',
+            'fecha_nacimiento' => 'required|date_format:d-m-Y',
             'peso' => 'required|numeric|min:0',
             'actividad_fisica' => 'required|in:1,2,3,4,5,6',
             'calorias' => 'numeric|integer|nullable',
@@ -28,12 +28,19 @@ class AuthController extends Controller
             'carbohidratos' => 'required_with:calorias|numeric|integer|nullable',
         ]);
 
+        $fecha = Carbon::createFromFormat('d-m-Y', $request->fecha_nacimiento);
+        $fecha_actual = Carbon::now();
+        $edad = $fecha_actual->diffInYears($fecha);
+        if($edad < 18){
+            return $this->sendError('La edad debe ser mayor a 17 años');
+        }
+
         $array = [
             'name' => $request->nombre,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'sexo' => $request->sexo,
-            'edad' => $request->edad,
+            'fecha_nacimiento' => $fecha,
             'peso' => $request->peso,
             'actividad_fisica' => $request->actividad_fisica,
         ];
@@ -47,7 +54,7 @@ class AuthController extends Controller
             ]);    
         } else{
             $array = array_merge($array, $this->calcular_requerimiento_nutricional(
-                $request->edad, $request->sexo, $request->peso, $request->actividad_fisica
+                $edad, $request->sexo, $request->peso, $request->actividad_fisica
             ));
         }
 

@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('edad');
+            $table->date('fecha_nacimiento');
             $table->enum('actividad_fisica', [1,2,3,4,5,6]);
             $table->integer('calorias');
             $table->float('carbohidratos');
