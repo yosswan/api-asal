@@ -38,7 +38,6 @@ class CreateIngredientesTable extends Migration
 				'Alimentos preparados',
 				'Alimentos Varios'
 			]);
-            $table->timestamps();
 		});
 	}
 

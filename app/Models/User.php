@@ -57,4 +57,8 @@ class User extends Authenticatable
         return $this->hasMany(Receta::class);
     }
 
+    public function comidas() {
+        return $this->belongsToMany(Comida::class, 'user_comida')->withPivot('id');
+    }
+
 }

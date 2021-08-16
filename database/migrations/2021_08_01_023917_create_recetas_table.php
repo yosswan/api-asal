@@ -22,7 +22,6 @@ class CreateRecetasTable extends Migration
 			$table->biginteger('user_id')->unsigned();
 			$table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
 
-            $table->timestamps();
 		});
 	}
 

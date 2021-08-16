@@ -42,4 +42,5 @@ Route::group([
     Route::post('ingredientes/truncate', [IngredientesController::class, 'destroy_all']);
     Route::put('user', [UserController::class, 'update']);
     Route::delete('user', [UserController::class, 'destroy']);
+    Route::post('user/comida', [UserController::class, 'agregar_comida']);
 });

@@ -26,4 +26,6 @@ class Receta extends Model implements Transformable
         return $this->belongsToMany(Ingrediente::class)->withPivot('cantidad');
     }
 
+    public $timestamps = false;
+
 }

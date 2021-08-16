@@ -20,6 +20,11 @@ class Comida extends Model implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'tipo',
+        'fecha'
+    ];
+
+    public $timestamps = false;
 
 }

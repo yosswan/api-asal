@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\UserComida;
 use App\Models\User;
+use App\Entities\Comida;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -76,8 +78,8 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre' => 'string',
             'email' => 'string|email|unique:users',
-            'password' => 'required|string|min:4',
             'new_password' => 'string|min:4',
+            'password' => 'required_with:new_password|string|min:4',
             'sexo' => 'in:H,M',
             'fecha_nacimiento' => 'date_format:d-m-Y',
             'peso' => 'numeric|min:0',
@@ -100,7 +102,7 @@ class UserController extends Controller
             }
 
             $user = $request->user();
-            if(!Hash::check($request->password, $user->password)){
+            if(!empty($request->password) && !Hash::check($request->password, $user->password)){
                 return $this->sendError('Contraseña incorrecta');
             }
 
@@ -140,6 +142,41 @@ class UserController extends Controller
             return $this->sendResponse($user, 'Usuario actualizado con éxito');
 
         } catch (Exception $e){
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function agregar_comida(Request $request){
+        try {
+            $validator = Validator::make($request->all(), [
+                'receta_id' => 'required|exists:recetas,id',
+                'tipo' => 'required|in:desayuno,almuerzo,merienda,cena',
+            ]);
+            if($validator->fails()){
+                return $this->sendError($validator->errors());
+            }
+
+            $fecha = Carbon::now()->format('Y-m-d');
+
+            $comida = Comida::where('tipo', $request->tipo)
+            ->where('fecha', $fecha)->get();
+            if($comida->isEmpty()){
+                $comida = Comida::create([
+                    'tipo' => $request->tipo,
+                    'fecha' => $fecha
+                ]);
+            }else{
+                $comida = $comida[0];
+            }
+            $user = $request->user();
+            $user->comidas()->attach($comida);
+            $comida = $user->comidas()->find($comida->id);
+            $usercomida = UserComida::find($comida->pivot->id);
+            $usercomida->recetas()->attach($request->receta_id);
+
+            return $this->sendResponse('', 'Comida agregada');
+
+        } catch (Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }

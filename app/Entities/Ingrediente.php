@@ -29,4 +29,6 @@ class Ingrediente extends Model implements Transformable
         'categoria',
     ];
 
+    public $timestamps = false;
+
 }
