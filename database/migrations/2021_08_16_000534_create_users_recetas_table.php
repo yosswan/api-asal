@@ -13,12 +13,14 @@ class CreateUsersRecetasTable extends Migration
      */
     public function up()
     {
-        Schema::create('usercomida_receta', function (Blueprint $table) {
-            $table->id();
+        Schema::create('receta_user', function (Blueprint $table) {
+            $table->date('fecha');
+            $table->enum('tipo', ['desayuno', 'almuerzo', 'cena', 'merienda']);
             $table->integer('receta_id')->unsigned();            
             $table->foreign('receta_id')->references('id')->on('recetas')->cascadeOnDelete();
-            $table->integer('usercomida_id')->unsigned();            
-            $table->foreign('usercomida_id')->references('id')->on('user_comida')->cascadeOnDelete();
+            $table->integer('user_id')->unsigned();            
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->unique(['user_id', 'receta_id', 'fecha', 'tipo']);
         });
     }
 
@@ -29,6 +31,6 @@ class CreateUsersRecetasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('usercomida_receta');
+        Schema::dropIfExists('receta_user');
     }
 }

@@ -58,7 +58,7 @@ class User extends Authenticatable
     }
 
     public function comidas() {
-        return $this->belongsToMany(Comida::class, 'user_comida')->withPivot('id');
+        return $this->belongsToMany(Receta::class)->withPivot('fecha', 'tipo');
     }
 
 }

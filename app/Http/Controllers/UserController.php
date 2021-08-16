@@ -158,21 +158,11 @@ class UserController extends Controller
 
             $fecha = Carbon::now()->format('Y-m-d');
 
-            $comida = Comida::where('tipo', $request->tipo)
-            ->where('fecha', $fecha)->get();
-            if($comida->isEmpty()){
-                $comida = Comida::create([
-                    'tipo' => $request->tipo,
-                    'fecha' => $fecha
-                ]);
-            }else{
-                $comida = $comida[0];
-            }
             $user = $request->user();
-            $user->comidas()->attach($comida);
-            $comida = $user->comidas()->find($comida->id);
-            $usercomida = UserComida::find($comida->pivot->id);
-            $usercomida->recetas()->attach($request->receta_id);
+            $user->comidas()->attach([$request->receta_id => [
+                'tipo' => $request->tipo,
+                'fecha' => $fecha
+            ]]);
 
             return $this->sendResponse('', 'Comida agregada');
 
