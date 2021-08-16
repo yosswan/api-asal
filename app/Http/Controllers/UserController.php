@@ -150,7 +150,8 @@ class UserController extends Controller
     public function agregar_comida(Request $request){
         try {
             $validator = Validator::make($request->all(), [
-                'receta_id' => 'required|exists:recetas,id',
+                'recetas' => 'required|array',
+                'recetas.*' => 'required|exists:recetas,id',
                 'tipo' => 'required|in:desayuno,almuerzo,merienda,cena',
             ]);
             if($validator->fails()){
@@ -160,10 +161,14 @@ class UserController extends Controller
             $fecha = Carbon::now()->format('Y-m-d');
 
             $user = $request->user();
-            $user->comidas()->attach([$request->receta_id => [
-                'tipo' => $request->tipo,
-                'fecha' => $fecha
-            ]]);
+            $array = [];
+            foreach ($request->recetas as $value) {
+                $array[$value] = [
+                    'tipo' => $request->tipo,
+                    'fecha' => $fecha
+                ];
+            }
+            $user->comidas()->attach($array);
 
             return $this->sendResponse('', 'Comida agregada');
 
