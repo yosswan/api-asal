@@ -43,4 +43,7 @@ Route::group([
     Route::put('user', [UserController::class, 'update']);
     Route::delete('user', [UserController::class, 'destroy']);
     Route::post('user/comida', [UserController::class, 'agregar_comida']);
+    Route::get('user/comida', [UserController::class, 'obtener_comidas']);
+    Route::delete('user/comida', [UserController::class, 'eliminar_comida']);
+    Route::get('user/comida/actual', [UserController::class, 'obtener_comidas_actuales']);
 });

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UserComida;
 use App\Models\User;
 use App\Entities\Comida;
+use App\Models\UserReceta;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -166,6 +167,57 @@ class UserController extends Controller
 
             return $this->sendResponse('', 'Comida agregada');
 
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function eliminar_comida(Request $request){
+        try {
+            $validator = Validator::make($request->all(), [
+                'receta_id' => 'required|exists:recetas,id',
+                'tipo' => 'required|in:desayuno,almuerzo,merienda,cena',
+            ]);
+            if($validator->fails()){
+                return $this->sendError($validator->errors());
+            }
+
+            $fecha = Carbon::now()->format('Y-m-d');
+
+            $user = $request->user();
+            $userreceta = UserReceta::where('user_id', $user->id)
+            ->where('receta_id', $request->receta_id)
+            ->where('fecha', $fecha)
+            ->where('tipo', $request->tipo)->get();
+
+            if($userreceta->isEmpty()){
+                return $this->sendError('Comida no registrada');
+            }else{
+                $userreceta = $userreceta[0];
+            }
+            $deleted = $userreceta->delete();
+
+            return $this->sendResponse($deleted, 'Comida eliminada');
+
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function obtener_comidas(Request $request){
+        try {
+            $user = $request->user();
+            return $this->sendResponse($user->comidas, 'Comidas');
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function obtener_comidas_actuales(Request $request){
+        try {
+            $user = $request->user();
+            $fecha = Carbon::now()->format('Y-m-d');
+            return $this->sendResponse($user->comidas()->where('fecha', $fecha)->get(), 'Comidas');
         } catch (Exception $e) {
             return $this->sendError($e->getMessage());
         }

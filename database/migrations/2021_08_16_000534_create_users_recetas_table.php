@@ -14,6 +14,7 @@ class CreateUsersRecetasTable extends Migration
     public function up()
     {
         Schema::create('receta_user', function (Blueprint $table) {
+            $table->increments('id');
             $table->date('fecha');
             $table->enum('tipo', ['desayuno', 'almuerzo', 'cena', 'merienda']);
             $table->integer('receta_id')->unsigned();            
