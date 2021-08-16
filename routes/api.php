@@ -46,4 +46,6 @@ Route::group([
     Route::get('user/comida', [UserController::class, 'obtener_comidas']);
     Route::delete('user/comida', [UserController::class, 'eliminar_comida']);
     Route::get('user/comida/actual', [UserController::class, 'obtener_comidas_actuales']);
+    Route::get('user/consumo/actual', [UserController::class, 'obtener_consumo_actual']);
+    Route::get('user/requerimiento', [UserController::class, 'obtener_requerimientos']);
 });

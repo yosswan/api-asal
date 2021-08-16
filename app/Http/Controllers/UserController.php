@@ -231,6 +231,48 @@ class UserController extends Controller
         }
     }
 
+    public function obtener_requerimientos(Request $request){
+        try {
+            $user = $request->user();
+            
+            $array = [
+                'calorias' => $user->calorias,
+                'grasas' => $user->grasas,
+                'carbohidratos' => $user->carbohidratos,
+                'proteinas' => $user->proteinas
+            ];
+            return $this->sendResponse($array, 'Requerimiento nutricional');
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function obtener_consumo_actual(Request $request){
+        try {
+            $user = $request->user();
+            $fecha = Carbon::now()->format('Y-m-d');
+            $calorias = $grasas = $proteinas = $carbohidratos = 0;
+            $comidas = $user->comidas()->where('fecha', $fecha)->get();
+            foreach ($comidas as $comida) {
+                foreach ($comida->ingredientes as $ingrediente) {
+                    $calorias += $ingrediente->calorias/100*$ingrediente->pivot->cantidad;
+                    $grasas += $ingrediente->grasas/100*$ingrediente->pivot->cantidad;
+                    $proteinas += $ingrediente->proteinas/100*$ingrediente->pivot->cantidad;
+                    $carbohidratos += $ingrediente->carbohidratos/100*$ingrediente->pivot->cantidad;
+                }
+            }
+            $array = [
+                'calorias' => $calorias,
+                'grasas' => $grasas,
+                'carbohidratos' => $carbohidratos,
+                'proteinas' => $proteinas
+            ];
+            return $this->sendResponse($array, 'Información nutricional del consumo actual');
+        } catch (Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *
