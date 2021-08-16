@@ -95,26 +95,29 @@ class UserController extends Controller
             if($validator->fails()){
                 return $this->sendError($validator->errors());
             }
-            $fecha = Carbon::createFromFormat('d-m-Y', $request->fecha_nacimiento);
-            $fecha_actual = Carbon::now();
-            $edad = $fecha_actual->diffInYears($fecha);
-            if($edad < 18){
-                return $this->sendError('La edad debe ser mayor a 17 años');
-            }
 
             $user = $request->user();
+            $array = [];
+
+            if(!empty($request->fecha_nacimiento)){
+                $fecha = Carbon::createFromFormat('d-m-Y', $request->fecha_nacimiento);
+                $fecha_actual = Carbon::now();
+                $edad = $fecha_actual->diffInYears($fecha);
+                if($edad < 18){
+                    return $this->sendError('La edad debe ser mayor a 17 años');
+                }
+                $array['fecha_nacimiento'] = $fecha;
+            }
+
             if(!empty($request->password) && !Hash::check($request->password, $user->password)){
                 return $this->sendError('Contraseña incorrecta');
             }
-
             if(!empty($request->new_password)){
                 $array['password'] = bcrypt($request->new_password);
             }
+            
             if(!empty($request->nombre)){
                 $array['name'] = $request->nombre;
-            }
-            if(!empty($request->fecha_nacimiento)){
-                $array['fecha_nacimiento'] = $fecha;
             }
 
             $lista = ['sexo', 'peso', 'actividad_fisica'];
