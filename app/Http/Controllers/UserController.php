@@ -232,10 +232,10 @@ class UserController extends Controller
                     }
                     $array[$key][$tipo] = [
                         'recetas' => $comida->all(),
-                        'calorias' => $calorias,
-                        'grasas' => $grasas,
-                        'carbohidratos' => $carbohidratos,
-                        'proteinas' => $proteinas
+                        'calorias' => round($calorias),
+                        'carbohidratos' => round($carbohidratos, 1),
+                        'proteinas' => round($proteinas, 1),
+                        'grasas' => round($grasas, 1),
                     ];
                 }
             }
