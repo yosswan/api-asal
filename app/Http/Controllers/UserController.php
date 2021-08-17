@@ -287,10 +287,10 @@ class UserController extends Controller
                 }
             }
             $array = [
-                'calorias' => $calorias,
-                'grasas' => $grasas,
-                'carbohidratos' => $carbohidratos,
-                'proteinas' => $proteinas
+                'calorias' => round($calorias),
+                'carbohidratos' => round($carbohidratos, 1),
+                'proteinas' => round($proteinas, 1),
+                'grasas' => round($grasas, 1),
             ];
             return $this->sendResponse($array, 'Información nutricional del consumo actual');
         } catch (Exception $e) {
